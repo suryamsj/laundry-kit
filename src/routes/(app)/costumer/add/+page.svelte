@@ -1,0 +1,112 @@
+<script>
+    import { enhance } from "$app/forms";
+    import {
+        Card,
+        Button,
+        FloatingLabelInput,
+        Helper,
+        Toast,
+    } from "flowbite-svelte";
+    import { fly } from "svelte/transition";
+
+    export let form;
+</script>
+
+<svelte:head>
+    <title>Laundry Kit - Tambah Data Pelanggan</title>
+</svelte:head>
+
+{#if form?.success}
+    <Toast
+        transition={fly}
+        params={{ x: 200 }}
+        class="fixed"
+        position="bottom-right"
+        color="green"
+    >
+        <svelte:fragment slot="icon">
+            <svg
+                aria-hidden="true"
+                class="w-5 h-5"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+                ><path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                /></svg
+            >
+            <span class="sr-only">Check icon</span>
+        </svelte:fragment>
+        {form?.message}
+    </Toast>
+{/if}
+{#if form?.failed}
+    <Toast
+        transition={fly}
+        params={{ x: 200 }}
+        class="fixed"
+        position="bottom-right"
+        color="red"
+    >
+        <svelte:fragment slot="icon">
+            <svg
+                aria-hidden="true"
+                class="w-5 h-5"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+                ><path
+                    fill-rule="evenodd"
+                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                    clip-rule="evenodd"
+                /></svg
+            >
+            <span class="sr-only">Error icon</span>
+        </svelte:fragment>
+        {form?.message}
+    </Toast>
+{/if}
+
+<div class="flex justify-between items-center mb-5">
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
+        Tambah Data Pelanggan
+    </h1>
+    <Button href="/costumer">Kembali</Button>
+</div>
+<Card class="max-w-none w-full">
+    <form method="post" use:enhance>
+        <div class="mb-4">
+            <FloatingLabelInput
+                style="outlined"
+                id="name"
+                name="name"
+                type="text"
+                label="Nama Pelanggan"
+                required
+            />
+        </div>
+        <div class="mb-4">
+            <FloatingLabelInput
+                style="outlined"
+                id="phone_number"
+                name="phone_number"
+                type="text"
+                label="Nomor Handphone"
+                required
+            />
+        </div>
+        <div class="mb-4">
+            <FloatingLabelInput
+                style="outlined"
+                id="address"
+                name="address"
+                type="text"
+                label="Alamat"
+                required
+            />
+        </div>
+        <Button color="blue" class="w-full mb-4" type="submit">Submit</Button>
+    </form>
+</Card>

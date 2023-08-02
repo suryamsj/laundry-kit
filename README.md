@@ -57,6 +57,7 @@ The following tools were used in this project:
 - [Knex.js](https://knexjs.org/)
 - [better-sqlite3](https://github.com/WiseLibs/better-sqlite3)
 - [crypto-js](https://github.com/brix/crypto-js)
+- [Storyset](https://storyset.com/)
 
 ## :white_check_mark: Requirements ##
 

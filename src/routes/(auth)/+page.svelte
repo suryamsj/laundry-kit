@@ -111,9 +111,3 @@
         </div>
     </div>
 </section>
-
-<style>
-    #auth {
-        min-height: 100vh;
-    }
-</style>

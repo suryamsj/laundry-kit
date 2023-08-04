@@ -1,9 +1,12 @@
+import { SECRET_KEY } from '$env/static/private';
 import CryptoJS from "crypto-js";
 
 /**
- * 
- * @param {string} string 
- * @returns {string}
+ * Menghasilkan hash dari string menggunakan algoritma SHA-256.
+ *
+ * @param {string} string String yang akan di-hash.
+ * @returns {string} Nilai hash dari string yang diberikan.
+ *
  */
 export function hashPassword(string) {
     const value = CryptoJS.SHA256(string).toString();
@@ -11,21 +14,25 @@ export function hashPassword(string) {
 }
 
 /**
- * 
- * @param {string} string 
- * @returns {string}
+ * Mengenkripsi string menggunakan algoritma AES dengan kunci rahasia.
+ *
+ * @param {string} string String yang akan dienkripsi.
+ * @returns {string} String terenkripsi.
+ *
  */
 export function cookieEncrypted(string) {
-    const value = CryptoJS.AES.encrypt(string, 'Sw3CWv)+syEn,V_').toString();
+    const value = CryptoJS.AES.encrypt(string, SECRET_KEY).toString();
     return value;
 }
 
 /**
- * 
- * @param {string} string 
- * @returns {string}
+ * Mendekripsi string yang telah dienkripsi menggunakan algoritma AES.
+ *
+ * @param {string} string String terenkripsi yang akan didekripsi.
+ * @returns {string} String hasil dekripsi.
+ *
  */
 export function cookieDecrypted(string) {
-    const value = CryptoJS.AES.decrypt(string, 'Sw3CWv)+syEn,V_').toString(CryptoJS.enc.Utf8);
+    const value = CryptoJS.AES.decrypt(string, SECRET_KEY).toString(CryptoJS.enc.Utf8);
     return value;
 }

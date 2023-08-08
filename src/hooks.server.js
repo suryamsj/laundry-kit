@@ -1,4 +1,4 @@
-import { authenticateUser } from "$lib/server/cekUser";
+import { authenticateUser } from "$lib/server/cekuser";
 import { redirect } from "@sveltejs/kit";
 
 const unProtectedRoutes = ['/', '/logout', '/register'];

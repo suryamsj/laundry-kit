@@ -1,5 +1,5 @@
-import { selectOneData } from '$lib/server/db';
 import { cookieDecrypted } from '$lib/utils/hash';
+import { selectUserByUsername } from './user';
 
 export const authenticateUser = async (event) => {
     const { cookies } = event
@@ -7,7 +7,7 @@ export const authenticateUser = async (event) => {
 
     if (user) {
         const user_decrypt = cookieDecrypted(user);
-        const response = await selectOneData('users', 'username', user_decrypt);
+        const response = await selectUserByUsername(user_decrypt);
 
         if (response) {
             return user;

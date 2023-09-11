@@ -1,7 +1,7 @@
-import { selectOneData } from '$lib/server/db';
 import { hashPassword } from '$lib/utils/hash';
-import { redirect } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 import { cookieEncrypted } from '$lib/utils/hash';
+import { selectUserByUsername } from '$lib/server/user';
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ locals }) {
@@ -13,28 +13,34 @@ export async function load({ locals }) {
 /** @type {import('./$types').Actions} */
 export const actions = {
     default: async ({ request, cookies }) => {
-        const form = await request.formData();
+        try {
+            const form = await request.formData();
 
-        const username = form.get('username');
-        const password = hashPassword(form.get("password"));
-        const user = await selectOneData('users', 'username', username);
+            const username = form.get('username');
+            const password = hashPassword(form.get("password"));
+            const user = await selectUserByUsername(username);
 
-        if (user) {
-            if (user.password === password) {
-                const hashPassword = cookieEncrypted(username);
-                cookies.set("user", hashPassword, {
-                    path: "/",
-                    httpOnly: true,
-                    sameSite: "strict",
-                    secure: '!dev',
-                    maxAge: 60 * 60 * 24 * 7,
-                })
-                throw redirect(301, '/home');
+            if (user) {
+                if (user.password === password) {
+                    const hashPassword = cookieEncrypted(username);
+                    cookies.set("user", hashPassword, {
+                        path: "/",
+                        httpOnly: true,
+                        sameSite: "strict",
+                        secure: '!dev',
+                        maxAge: 60 * 60 * 24 * 7,
+                    })
+                } else {
+                    return fail(401, { error: true, message: 'Password yang anda masukkan salah' })
+                }
             } else {
-                return { failed: true, message: 'Password yang anda masukkan salah' }
+                return fail(401, { error: true, message: 'Akun anda tidak di temukan' })
             }
-        } else {
-            return { failed: true, message: 'Akun anda tidak di temukan' }
+        } catch (error) {
+            return fail(500, {
+                error: true,
+                message: "Server Error"
+            })
         }
     }
 };

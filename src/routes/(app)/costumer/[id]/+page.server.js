@@ -1,29 +1,30 @@
-import { selectOneData, updateData } from '$lib/server/db';
+import { selectCostumerById, updateCostumer } from '$lib/server/costumer';
+import { fail } from '@sveltejs/kit';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ params }) {
     const id = params.id;
-    const costumer = await selectOneData('costumers', 'id', id);
-
-    if (costumer === undefined) {
-        return { error: true };
-    }
-
+    const costumer = await selectCostumerById(id);
     return { costumer };
 };
 
 /** @type {import('./$types').Actions} */
 export const actions = {
     default: async ({ request, params }) => {
-        const id = params.id;
-        const formData = await request.formData();
+        try {
+            const id = params.id;
+            const formData = await request.formData();
 
-        const name = formData.get("name");
-        const phone_number = formData.get("phone_number");
-        const address = formData.get("address");
+            const name = formData.get("name");
+            const phone_number = formData.get("phone_number");
+            const address = formData.get("address");
 
-        const res = await updateData({ name, phone_number, address }, 'costumers', 'id', id);
-
-        return res[0] === 0 ? { failed: true, message: 'Data gagal diubah' } : { success: true, message: 'Data berhasil diubah' };
+            const res = await updateCostumer(id, {
+                name, phone_number, address
+            })
+            return { success: true, message: 'Data Pelanggan berhasil diubah', data: res }
+        } catch (error) {
+            return fail(500, { error: true, message: 'Data Pelanggan gagal diubah' })
+        }
     }
 };

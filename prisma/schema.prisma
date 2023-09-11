@@ -1,0 +1,55 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id       String @id @unique @default(cuid())
+  name     String
+  username String @unique
+  password String
+}
+
+model Costumers {
+  id           String        @id @unique @default(cuid())
+  name         String
+  phone_number String
+  address      String
+  Transaction  Transaction[]
+}
+
+model Packages {
+  id          String       @id @unique @default(cuid())
+  name        String
+  price       Int
+  transaction Transaction?
+}
+
+model Clothes {
+  id              String      @id @unique @default(cuid())
+  clothing_type   String
+  clothing_amount String
+  transactionId   String
+  transaction     Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+}
+
+model Transaction {
+  id                      String    @id @unique @default(cuid())
+  transaction_date        DateTime  @default(now())
+  costumer                Costumers @relation(fields: [costumersId], references: [id])
+  packages                Packages  @relation(fields: [packagesId], references: [id])
+  weight                  Int
+  transaction_finish_date DateTime
+  transaction_status      String
+  transaction_price       Int
+  clothes                 Clothes[]
+  costumersId             String
+  packagesId              String    @unique
+}

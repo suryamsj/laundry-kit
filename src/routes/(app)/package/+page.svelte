@@ -1,22 +1,20 @@
 <script>
-  import { formatDate } from "$lib/utils/datetime";
-  import { formatNumberToCurrency } from "$lib/utils/rupiah";
+  import { Button, Toast } from "flowbite-svelte";
   import { html } from "gridjs";
   import Grid from "gridjs-svelte";
-  import { idID } from "gridjs/l10n";
-  import { Button, Toast } from "flowbite-svelte";
   import { fly } from "svelte/transition";
+  import { idID } from "gridjs/l10n";
+
+  export let form;
 
   /** @type {import('./$types').PageData} */
   export let data;
 
-  export let form;
-
-  $: ({ transactions } = data);
+  $: ({ packages } = data);
 </script>
 
 <svelte:head>
-  <title>Laundry Kit - Data Transaksi</title>
+  <title>Laundry Kit - Data Harga</title>
 </svelte:head>
 
 {#if form?.success}
@@ -73,13 +71,11 @@
 {/if}
 
 <div class="flex justify-between items-center mb-5">
-  <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
-    Data Transaksi
-  </h1>
-  <Button href="/transaction/add">Tambah Data Transaksi</Button>
+  <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Data Paket</h1>
+  <Button href="/package/add">Tambah Data Paket</Button>
 </div>
 <Grid
-  data={transactions}
+  data={packages}
   pagination={{ limit: 5 }}
   search={true}
   language={idID}
@@ -89,49 +85,19 @@
       hidden: true,
     },
     {
-      name: "Tanggal Transaksi",
-      data: (row) => formatDate(row.transaction_date),
+      name: "Nama",
+      data: (row) => row.name,
     },
     {
-      name: "Nama Pelanggan",
-      data: (row) => row.costumer.name,
-    },
-    {
-      name: "Berat",
-      data: (row) => row.weight,
-    },
-    {
-      name: "Tanggal Selesai",
-      data: (row) => formatDate(row.transaction_finish_date),
-    },
-    {
-      name: "Harga",
-      data: (row) => formatNumberToCurrency(row.transaction_price),
-    },
-    {
-      name: "status",
-      data: (row) => row.transaction_status,
+      name: "Harga / Kg",
+      data: (row) => row.price,
     },
     {
       name: "Aksi",
       formatter: (cell, row) => [
         html(`
-        <div class="grid lg:gap-1 xl:gap-1 lg:grid-cols-3">
-          <a href="/transaction/detail/${row.cells[0].data}" class="text-center font-medium focus:ring-4 focus:outline-none inline-flex items-center justify-center px-5 py-2.5 text-sm text-white bg-primary-700 hover:bg-primary-800 dark:bg-primary-600 dark:hover:bg-primary-700 focus:ring-primary-300 dark:focus:ring-primary-800 rounded-lg">
-            <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="16"
-    height="16"
-    fill="currentColor"
-    class="bi bi-eye-fill"
-    viewBox="0 0 16 16"
-  >
-    <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
-    <path
-      d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"
-    />
-  </svg></a>
-          <a href="/transaction/${row.cells[0].data}" class="text-center font-medium focus:ring-4 focus:outline-none inline-flex items-center justify-center px-5 py-2.5 text-sm text-white bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 focus:ring-blue-300 dark:focus:ring-blue-800 rounded-lg">
+        <div class="flex gap-2">
+          <a href="/package/${row.cells[0].data}" class="text-center font-medium focus:ring-4 focus:outline-none inline-flex items-center justify-center px-5 py-2.5 text-sm text-white bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 focus:ring-blue-300 dark:focus:ring-blue-800 rounded-lg">
           <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"

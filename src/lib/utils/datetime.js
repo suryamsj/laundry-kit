@@ -1,40 +1,23 @@
 /**
- * Mengubah objek Date menjadi string dengan format "tanggal - bulan - tahun".
- *
- * @param {Date} date - Objek Date yang akan diubah.
- * @returns {string} Tanggal dengan format "tanggal - bulan - tahun".
+ * Mengubah format tanggal ISO 8601 menjadi format "tanggal bulan tahun".
+ * @param {string} isoDateString - Tanggal dalam format ISO 8601.
+ * @param {string} [language='id-ID'] - Kode bahasa untuk nama bulan (opsional).
+ * @returns {string} Tanggal dalam format "tanggal bulan tahun".
  */
-export function formatDateToDDMMYYYY(date) {
-    // Mendapatkan informasi tanggal, bulan, dan tahun
-    const year = date.getFullYear(); // Tahun (contoh: 2023)
-    const month = date.getMonth(); // Bulan (0 - 11, 0 untuk Januari, 11 untuk Desember)
-    const day = date.getDate(); // Tanggal (1 - 31)
+export function formatDate(isoDateString, language = 'id-ID') {
+    // Ubah menjadi objek Date
+    const date = new Date(isoDateString);
 
-    // Fungsi untuk menambahkan nol di depan angka jika nilainya kurang dari 10
-    function addLeadingZero(number) {
-        return number < 10 ? `0${number}` : number.toString();
-    }
+    // Definisikan nama bulan dalam bahasa yang diinginkan
+    const monthNames = new Intl.DateTimeFormat(language, { month: 'long' }).formatToParts(date).find(part => part.type === 'month').value;
 
-    // Format tanggal dalam format "tanggal - bulan - tahun"
-    const formattedDate = `${addLeadingZero(day)}-${addLeadingZero(
-        month + 1
-    )}-${year}`;
+    // Dapatkan tanggal, bulan, dan tahun dari objek Date
+    const day = date.getDate();
+    const month = monthNames;
+    const year = date.getFullYear();
 
-    return formattedDate;
-}
-
-/**
- * Mengubah string tanggal dengan format "tahun-bulan-tanggal" menjadi "tanggal-bulan-tahun".
- *
- * @param {string} date - Tanggal dengan format "tahun-bulan-tanggal".
- * @returns {string} Tanggal dengan format "tanggal-bulan-tahun".
- */
-export function formatDateReverse(date) {
-    // Pisahkan tanggal, bulan, dan tahun dari inputDate
-    const [year, month, day] = date.split('-');
-
-    // Format tanggal dalam format "tanggal - bulan - tahun"
-    const formattedDate = `${day}-${month}-${year}`;
+    // Buat format tanggal yang diinginkan
+    const formattedDate = `${day} ${month} ${year}`;
 
     return formattedDate;
 }
